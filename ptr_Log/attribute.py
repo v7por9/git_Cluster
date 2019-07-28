@@ -79,12 +79,19 @@ class Attributes:
             full_url = self.url + "id" + str(app_number)
             try:
                 request = urllib.request.urlopen(full_url).read()
-                resolution = str(request).split("Resolution")[1].split("/a><")[0].replace('<', "").replace('">', '')
-                file_attributes = (str(request).
-                                   split('content="HD Wallpapers, Desktop High Definition Wallpapers,')[1].
-                                   split('content="width=device-width')[0].
-                                   replace('n<meta name="viewport', "").replace('."/>\\"', ""))
+                try:
+                    resolution = str(request).split("Resolution")[1].split("/a><")[0].replace('<', "").replace('">', '')
+                except IndexError:
+                    resolution = 0
+                try:
+                    file_attributes = (str(request).
+                                       split('content="HD Wallpapers, Desktop High Definition Wallpapers,')[1].
+                                       split('content="width=device-width')[0].
+                                       replace('n<meta name="viewport', "").replace('."/>\\"', ""))
+                except IndexError:
+                    file_attributes = "No Tags"
                 self.db_insert(full_url, file_attributes, resolution)
+                self.db_commit()
                 # Combining the variables, i.e attributes, resolution, url link.
             except EnvironmentError:
                 pass
