@@ -78,7 +78,7 @@ class Attributes:
         for app_number in self.range:
             full_url = self.url + "id" + str(app_number)
             try:
-                request = urllib.request.urlopen(full_url).read()
+                request = urllib.request.urlopen(full_url, timeout=1000).read()
                 try:
                     resolution = str(request).split("Resolution")[1].split("/a><")[0].replace('<', "").replace('">', '')
                 except IndexError:
