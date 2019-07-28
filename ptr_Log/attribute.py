@@ -1,11 +1,14 @@
 #! /usr/bin/python
 
 import pymysql
+import urllib.request
+
 
 class Attributes:
     def __init__(self):
-        self.url = "https://sf.co.ua"
+        self.url = "https://sf.co.ua/"
         self.db_name = "ptr_Tags_DB"
+        self.range = range(100000, 100005)
         with open('st0r3.txt', 'r') as fyle:
             login_details = eval(str(fyle.readlines()).replace("\\n", ''))
             self.username = login_details[0]
@@ -46,15 +49,50 @@ class Attributes:
             self.action("""create table tag_Referencing
             (id int(12) not null primary key auto_increment,
             tags_Attributes text not null,
-            url_Referencing text)""")
+            url_Referencing text,
+            Resolution text)""")
         else:
             # Database already present, since only one database is needed.
             print("Database already exists.")
             pass
         return
 
+    def db_insert(self, tag, urls, res):
+        """
+        Entering the data into a two column database.
+        :return: Entering data into tags & urls.
+        """
+        self.action("""insert into tag_Referencing 
+        (tags_Attributes, url_Referencing, Resolution) 
+        values ('%s', '%s', '%s')""" % (tag, urls, res))
+        return
 
-test = Attributes()
-test.database_create()
-test.action('use ptr_Tags_DB')
-print(test.action("show tables"))
+    def db_commit(self):
+        self.connection.commit()
+        return
+
+    def ptr_request(self):
+        """Loading HTML file of the page to get all the details
+        :return: the tags of the file, the url link, the image resolution,
+        """
+        for app_number in self.range:
+            full_url = self.url + "id" + str(app_number)
+            try:
+                request = urllib.request.urlopen(full_url).read()
+                resolution = str(request).split("Resolution")[1].split("/a><")[0].replace('<', "").replace('">', '')
+                file_attributes = (str(request).
+                                   split('content="HD Wallpapers, Desktop High Definition Wallpapers,')[1].
+                                   split('content="width=device-width')[0].
+                                   replace('n<meta name="viewport', "").replace('."/>\\"', ""))
+                self.db_insert(full_url, file_attributes, resolution)
+                # Combining the variables, i.e attributes, resolution, url link.
+            except EnvironmentError:
+                pass
+
+
+if __name__ == '__main__':
+    tags = Attributes()
+    tags.database_create()
+    tags.action('use ptr_Tags_DB')
+    tags.ptr_request()
+    tags.db_commit()
