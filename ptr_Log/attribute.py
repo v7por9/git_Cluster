@@ -8,7 +8,7 @@ class Attributes:
     def __init__(self):
         self.url = "https://sf.co.ua/"
         self.db_name = "ptr_Tags_DB"
-        self.range = range(100000, 100005)
+        self.range = range(0, 500000)
         with open('st0r3.txt', 'r') as fyle:
             login_details = eval(str(fyle.readlines()).replace("\\n", ''))
             self.username = login_details[0]
