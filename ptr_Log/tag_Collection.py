@@ -9,7 +9,7 @@ tag_File = attribute.Attributes()
 class Indexing:
     def __init__(self):
         # Use test database...
-        self.database = 'test_ptr_Tags_DB'
+        self.database = 'ptr_Tags_DB'
         # Switch to actual database
         #self.database = tag_File.db_name
         self.no_tags = []
@@ -39,7 +39,7 @@ class Indexing:
         """
         # Execute and confirm database use & presence other than use in __main__
         self.db_preparation()
-        data_log = tag_File.action("""select url_Referencing, tags_Attributes from tag_Referencing;""")
+        data_log = tag_File.action("""select tags_Attributes, url_Referencing from tag_Referencing;""")
         return list(data_log)
 
     def eliminate(self):
