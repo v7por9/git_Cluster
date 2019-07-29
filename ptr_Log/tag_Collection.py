@@ -56,12 +56,42 @@ class Indexing:
             else:
                 self.no_tags.append(refer[1])
         return store
-    
 
+    def searching(self):
+        final_storage = []
+        """
+        Merging all the tags into a list
+        :return: URL reference & the Tags Associated
+        """
+        for referenced in self.eliminate():
+            interim_tag = '[' + referenced[0] + ']'
+            final_tag = interim_tag.replace('[ ', "['").replace(', ', "', '").replace(' ]', "']")
+            final_url = referenced[1]
+            merger_all = (eval(final_tag), final_url)
+            final_storage.append(merger_all)
+        return final_storage
+
+    def all_available(self):
+        """
+        Producing all available for user selection.
+        :return: returns a single list of all tags.
+        """
+        generated_tags = []
+        tester = []
+        for tags_only in self.searching():
+            for single_tags in tags_only[0]:
+                tester.append(single_tags)
+                if single_tags not in generated_tags:
+                    generated_tags.append(single_tags)
+                else:
+                    pass
+        print("Total number of unique tags is %d" % len(generated_tags))
+        return generated_tags
+
+    #def setting_tags
 
 test = Indexing()
-print(test.eliminate())
-print(len(test.eliminate()))
-print(len(test.no_tags))
+print(test.all_available())
+
 
 
