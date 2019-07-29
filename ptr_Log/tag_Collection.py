@@ -85,13 +85,38 @@ class Indexing:
                     generated_tags.append(single_tags)
                 else:
                     pass
-        print("Total number of unique tags is %d" % len(generated_tags))
         return generated_tags
 
-    #def setting_tags
+    def setting_tags(self):
+        """User input of Tags.
+        :return: tags selected
+        """
+        user_data = []
+        print("\n########## Or just press enter for all ptr: ")
+        multiple_tags = input("Enter the desired tags: (Separate with a comma) ' and Space,' : ")
+        analyze_tag = eval(str('["' + multiple_tags + '"]').replace(',', '", "'))
+        for user_tags in analyze_tag:
+            for setter in self.searching():
+                for tags_only in setter[0]:
+                    if user_tags in tags_only:
+                        user_data.append(setter)
+        return user_data
 
-test = Indexing()
-print(test.all_available())
+    def push_loader(self):
+        """
+        Pushing all the final data into ptr_Loader
+        :return: a list of all the url containing the username.
+        """
+        print("Total number of unique tags is %d" % len(self.all_available()))
+        print("select tags from below \n%s" % str(self.all_available()))
+        pure_urls = []
+        for download_urls in self.setting_tags():
+            pure_urls.append(download_urls[1])
+        print("The total Number of files to be downloaded is %d" % len(pure_urls))
+        return pure_urls
 
 
+if __name__ == '__main__':
+    pick = Indexing()
+    pick.push_loader()
 
