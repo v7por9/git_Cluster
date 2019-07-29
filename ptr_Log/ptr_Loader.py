@@ -3,13 +3,14 @@ import os
 import urllib.request
 import shutil
 import sys
+from ptr_Log import tag_Collection
 
 
 class Activity:
     def __init__(self):
         self.url = "https://sf.co.ua/"
         # Items returned from collection is a list.
-        self.item = ["https://sf.co.ua/id346", 'https://sf.co.ua/id8778']
+        self.item = tag_Collection.Indexing().push_loader()
         self.path = os.path.join(os.getcwd(), '../..')
         os.chdir(self.path)
         try:
@@ -39,11 +40,11 @@ class Activity:
                 try:
                     if sys.platform.startswith('win'):
                         shutil.move(temp_name, os.path.abspath(self.full_path + filename))
-                        print(temp_name, os.path.abspath(self.full_path + filename))
+                        print(os.path.abspath(self.full_path + filename))
 
                     elif sys.platform.startswith('linux'):
                         shutil.move(temp_name, os.path.join(self.full_path, filename))
-                        print(temp_name, os.path.join(self.full_path, filename))
+                        print(os.path.join(self.full_path, filename))
 
                 except FileExistsError:
                     os.remove(os.path.join(self.full_path, filename))
