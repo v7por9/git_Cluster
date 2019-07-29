@@ -48,8 +48,8 @@ class Attributes:
             # New database has been created, populate the db with tables.
             self.action("""create table tag_Referencing
             (id int(12) not null primary key auto_increment,
-            tags_Attributes text not null,
-            url_Referencing text,
+            url_Referencing text not null,
+            tags_Attributes text,
             Resolution text)""")
         else:
             # Database already present, since only one database is needed.
@@ -63,7 +63,7 @@ class Attributes:
         :return: Entering data into tags & urls.
         """
         self.action("""insert into tag_Referencing 
-        (tags_Attributes, url_Referencing, Resolution) 
+        (url_Referencing, tags_Attributes, Resolution) 
         values ('%s', '%s', '%s')""" % (tag, urls, res))
         return
 
@@ -78,10 +78,13 @@ class Attributes:
         :return: return range
         """
         self.action("use %s" % self.db_name)
-        recorded_url = eval(str(list(self.action("select tags_Attributes from tag_Referencing"))).
+        recorded_url = eval(str(list(self.action("select url_Referencing from tag_Referencing"))).
                             replace("(", "").
                             replace(",)", ""))
-        renew_start = int(str(recorded_url[-1]).split('id')[-1])
+        try:
+            renew_start = int(str(recorded_url[-1]).split('id')[-1])
+        except IndexError:
+            renew_start = 0
         if renew_start < self.start:
             data_range.append(self.start)
         else:
@@ -118,8 +121,8 @@ class Attributes:
 
 if __name__ == '__main__':
     tags = Attributes()
-    print("Picking up from %s" % str(tags.db_continue()))
     tags.database_create()
     tags.action('use ptr_Tags_DB')
+    print("Picking up from %s" % str(tags.db_continue()))
     tags.ptr_request()
     tags.db_commit()
