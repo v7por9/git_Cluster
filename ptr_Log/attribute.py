@@ -8,7 +8,7 @@ class Attributes:
     def __init__(self):
         self.url = "https://sf.co.ua/"
         self.db_name = "ptr_Tags_DB"
-        self.range = range(0, 500000)
+        self.start, self.stop = (0, 500000)
         with open('st0r3.txt', 'r') as fyle:
             login_details = eval(str(fyle.readlines()).replace("\\n", ''))
             self.username = login_details[0]
@@ -71,14 +71,33 @@ class Attributes:
         self.connection.commit()
         return
 
+    def db_continue(self):
+        data_range = []
+        """
+        Reading last location of file tags and continuing.
+        :return: return range
+        """
+        self.action("use %s" % self.db_name)
+        recorded_url = eval(str(list(self.action("select tags_Attributes from tag_Referencing"))).
+                            replace("(", "").
+                            replace(",)", ""))
+        renew_start = int(str(recorded_url[-1]).split('id')[-1])
+        if renew_start < self.start:
+            data_range.append(self.start)
+        else:
+            data_range.append(renew_start)
+        data_range.append(int(self.stop))
+        data_tuple = eval(str(data_range).replace('[', "(").replace("]", ')'))
+        return data_tuple
+
     def ptr_request(self):
         """Loading HTML file of the page to get all the details
         :return: the tags of the file, the url link, the image resolution,
         """
-        for app_number in self.range:
+        for app_number in range(self.db_continue()[0], self.db_continue()[1]):
             full_url = self.url + "id" + str(app_number)
             try:
-                request = urllib.request.urlopen(full_url, timeout=1000).read()
+                request = urllib.request.urlopen(full_url).read()
                 try:
                     resolution = str(request).split("Resolution")[1].split("/a><")[0].replace('<', "").replace('">', '')
                 except IndexError:
@@ -99,6 +118,7 @@ class Attributes:
 
 if __name__ == '__main__':
     tags = Attributes()
+    print("Picking up from %s" % str(tags.db_continue()))
     tags.database_create()
     tags.action('use ptr_Tags_DB')
     tags.ptr_request()
