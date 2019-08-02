@@ -102,7 +102,6 @@ class Indexing:
         analyze_tag = eval(str('["' + multiple_tags + '"]').replace(',', '","'))
 
         for selected_tags in analyze_tag:
-                print(user_data, selected_tags)
                 for setter in self.searching():
                     for tags_only in setter[0]:
                         if selected_tags in tags_only:
