@@ -6,8 +6,6 @@ import sys
 import importlib
 tag = importlib.import_module('tag_Collection')
 tag_Collection = tag.Indexing()
-print(dir(tag_Collection))
-exit()
 
 
 class Activity:
