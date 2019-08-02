@@ -98,13 +98,15 @@ class Indexing:
         """
         user_data = []
         print("\n########## Or just press enter for all ptr: ")
-        multiple_tags = input("Enter the desired tags: (Separate with a comma) ' and Space,' : ")
-        analyze_tag = eval(str('["' + multiple_tags + '"]').replace(',', '", "'))
-        for user_tags in analyze_tag:
-            for setter in self.searching():
-                for tags_only in setter[0]:
-                    if user_tags in tags_only:
-                        user_data.append(setter)
+        multiple_tags = input("Enter the desired tags: (Separate with a comma) and No Space: ")
+        analyze_tag = eval(str('["' + multiple_tags + '"]').replace(',', '","'))
+
+        for selected_tags in analyze_tag:
+                print(user_data, selected_tags)
+                for setter in self.searching():
+                    for tags_only in setter[0]:
+                        if selected_tags in tags_only:
+                            user_data.append(setter)
         return user_data
 
     def push_loader(self):
