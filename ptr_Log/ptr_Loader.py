@@ -3,14 +3,18 @@ import os
 import urllib.request
 import shutil
 import sys
-from ptr_Log import tag_Collection
+import importlib
+tag = importlib.import_module('tag_Collection')
+tag_Collection = tag.Indexing()
+print(dir(tag_Collection))
+exit()
 
 
 class Activity:
     def __init__(self):
         self.url = "https://sf.co.ua/"
         # Items returned from collection is a list.
-        self.item = tag_Collection.Indexing().push_loader()
+        self.item = tag_Collection.push_loader()
         self.path = os.path.join(os.getcwd(), '../..')
         os.chdir(self.path)
         try:

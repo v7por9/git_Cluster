@@ -1,17 +1,16 @@
 #! /usr/bin/python
-from ptr_Log import attribute
+#from ptr_Log import attribute
 import pymysql
-
+import importlib
 # Define import from Tags Attribute file.
+attribute = importlib.import_module("attribute")
 tag_File = attribute.Attributes()
 
 
 class Indexing:
     def __init__(self):
-        # Use test database...
-        self.database = 'ptr_Tags_DB'
-        # Switch to actual database
-        #self.database = tag_File.db_name
+        # Switch into the database
+        self.database = tag_File.db_name
         self.no_tags = []
 
         with open('st0r3.txt', 'r') as fyle:
@@ -65,10 +64,16 @@ class Indexing:
         """
         for referenced in self.eliminate():
             interim_tag = '[' + referenced[0] + ']'
-            final_tag = interim_tag.replace('[ ', "['").replace(', ', "', '").replace(' ]', "']")
-            final_url = referenced[1]
-            merger_all = (eval(final_tag), final_url)
-            final_storage.append(merger_all)
+            try:
+                final_tag = interim_tag.replace('[ ', "['").replace(', ', "', '").replace(' ]', "']")
+                final_url = referenced[1]
+                merger_all = (eval(final_tag), final_url)
+                final_storage.append(merger_all)
+            except SyntaxError:
+                final_tag = interim_tag.replace("[ ", '["').replace(", ", '", "').replace(' ]', '"]')
+                final_url = referenced[1]
+                merger_all = (eval(final_tag), final_url)
+                final_storage.append(merger_all)
         return final_storage
 
     def all_available(self):
