@@ -29,8 +29,8 @@ class Attributes:
         try:
             self.cursor.execute(query)
             return self.cursor.fetchall()
-        except pymysql.err.ProgrammingError:
-            print("There was an **SQL Syntax Error**")
+        except pymysql.err.ProgrammingError as e:
+            print("There was an **SQL Syntax Error** %s" % e)
         return
 
     def database_create(self):
