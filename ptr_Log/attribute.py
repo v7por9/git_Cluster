@@ -51,6 +51,24 @@ class Attributes:
             url_Referencing text not null,
             tags_Attributes text,
             Resolution text)""")
+
+        elif self.db_name in present_db:
+            """Confirming if the database has any tables !?"""
+            self.action('use %s' % self.db_name)
+            table_present = self.action("show tables")
+            print(table_present)
+
+            if table_present is ():
+                print("Missing Table Columns")
+                self.action("""create table tag_Referencing
+                            (id int(12) not null primary key auto_increment,
+                            url_Referencing text not null,
+                            tags_Attributes text,
+                            Resolution text)""")
+            else:
+                print("Table Columns present")
+                pass
+
         else:
             # Database already present, since only one database is needed.
             print("Database already exists.")
