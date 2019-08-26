@@ -1,4 +1,4 @@
-#! /usr/bin/python
+#! /usr/bin/python3
 
 import pymysql
 import urllib.request
@@ -80,8 +80,8 @@ class Attributes:
         Entering the data into a two column database.
         :return: Entering data into tags & urls.
         """
-        self.action("""insert into tag_Referencing 
-        (url_Referencing, tags_Attributes, Resolution) 
+        self.action("""insert into tag_Referencing
+        (url_Referencing, tags_Attributes, Resolution)
         values ('%s', '%s', '%s')""" % (tag, urls, res))
         return
 

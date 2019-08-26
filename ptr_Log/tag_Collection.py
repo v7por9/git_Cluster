@@ -1,5 +1,6 @@
-#! /usr/bin/python
+#! /usr/bin/python3
 #from ptr_Log import attribute
+
 import pymysql
 import importlib
 # Define import from Tags Attribute file.
